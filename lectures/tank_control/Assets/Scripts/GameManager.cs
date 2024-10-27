@@ -4,10 +4,9 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    
+    [SerializeField] private InGameUI inGameUI;
     // Start is called before the first frame update
     private Collectable[] _collectables;
-
     private float _scoreTotal = 0;
     private float _gameTime = 0;
     void Start()
@@ -20,11 +19,12 @@ public class GameManager : MonoBehaviour
     public void AddScore(int score)
     {
         _scoreTotal += score;
-        Debug.Log($"Our new total score is {_scoreTotal}");
+        inGameUI.UpdateScore(_scoreTotal);
     }
     // Update is called once per frame
     void Update()
     {
         _gameTime += Time.deltaTime;
+        inGameUI.UpdateTime(_gameTime);
     }
 }

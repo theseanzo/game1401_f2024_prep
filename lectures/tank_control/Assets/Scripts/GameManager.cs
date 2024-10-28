@@ -2,7 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameManager : MonoBehaviour
+/// <summary>
+/// Our GameManager has become a singleton, which means we can now communicate with it publicly. This also means that there can only be one in the scene; make sure people are aware of this.
+/// </summary>
+public class GameManager : Singleton<GameManager> 
 {
     [SerializeField] private InGameUI inGameUI;
     // Start is called before the first frame update
@@ -12,8 +15,6 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         _collectables = FindObjectsOfType<Collectable>(); //global function, allows you to find everything 
-        foreach (Collectable collectable in _collectables)
-            collectable.Manager = this;
     }
 
     public void AddScore(int score)

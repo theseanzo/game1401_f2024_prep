@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Quaternion = System.Numerics.Quaternion;
 
 public class PlayerController : MonoBehaviour
 {
@@ -9,6 +10,8 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private float jumpSpeed = 10f;
+    [SerializeField] private Weapon weapon;
+    [SerializeField] private Transform weaponLocation; //used for when we try a weapon pickup to spawn a weapon
     private Vector2 _inputVector;
     private Rigidbody _rb;
     
@@ -18,7 +21,7 @@ public class PlayerController : MonoBehaviour
     {
         _rb = GetComponent<Rigidbody>();
     }
-
+    
     // Update is called once per frame
     void Update()
     {
@@ -34,10 +37,27 @@ public class PlayerController : MonoBehaviour
             _rb.AddForce(new Vector3(0, jumpSpeed, 0), ForceMode.Impulse);//it would be good to discuss a bit about force modes
         }
 
-    }
+        if (Input.GetButtonDown("Fire1"))
+        {
+            weapon?.Shoot(transform.forward);//null check to see if the weapon exists
+        }
 
+    }
     private void FixedUpdate()
     {
+
+    }
+
+    public void ChangeWapon(Weapon newWeapon)
+    {
+        if (weapon != null)
+        {
+            Weapon oldWeapon = weapon;
+            Destroy(oldWeapon.gameObject);
+        }
+       
+        weapon = (Weapon)Instantiate(newWeapon, weaponLocation);
+        
 
     }
 }

@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditorInternal;
 using UnityEngine;
+using UnityEngine.Events;
 using Quaternion = System.Numerics.Quaternion;
 
 public class PlayerController : MonoBehaviour
@@ -14,7 +16,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Transform weaponLocation; //used for when we try a weapon pickup to spawn a weapon
     private Vector2 _inputVector;
     private Rigidbody _rb;
-    
+
+    public UnityEvent UnityPlayerHitEvent;
     
     // Start is called before the first frame update
     void Start()
@@ -55,9 +58,15 @@ public class PlayerController : MonoBehaviour
             Weapon oldWeapon = weapon;
             Destroy(oldWeapon.gameObject);
         }
-       
-        weapon = (Weapon)Instantiate(newWeapon, weaponLocation);
-        
 
+        weapon = (Weapon)Instantiate(newWeapon, weaponLocation);
+    }
+
+    private void OnCollisionEnter(Collision other)
+    {
+        if (other.gameObject.TryGetComponent<Projectile>(out Projectile projectile))
+        {
+            UnityPlayerHitEvent?.Invoke();
+        }
     }
 }
